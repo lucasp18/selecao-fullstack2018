@@ -110,6 +110,7 @@ class GHeader extends GHeaderParent {
         $arrayMenu[] = array('title' => 'Início', 'url' => 'index.php', 'icon' => 'fa fa-home');
         $arrayMenu[] = array('title' => 'Usuários', 'url' => 'usuario/usuario.php', 'icon' => 'fa fa-user');
         $arrayMenu[] = array('title' => 'Animais', 'url' => 'animal/animal.php', 'icon' => 'fa fa-github');
+        $arrayMenu[] = array('title' => 'Proprietarios', 'url' => 'proprietario/proprietario.php', 'icon' => 'fa fa-shield');
 
         foreach ($arrayMenu as $menu) {
             $html .= '<li class="' . $active . '">';
