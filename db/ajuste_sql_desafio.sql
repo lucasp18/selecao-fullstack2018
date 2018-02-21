@@ -1,0 +1,1 @@
+create table proprietario(pro_int_codigo int(11) not null auto_increment, pro_var_nome varchar(50) not null, pro_var_email varchar(50) not null, pro_var_telefone varchar(12) not null, primary key(pro_int_codigo) );
