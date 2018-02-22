@@ -27,13 +27,13 @@ echo $htmlForm;
 ?>
 <script>
     $(function() {
-        $('#pro_var_telefone').mask("(99) 9999-9999?9");
+        //$('#pro_var_telefone').mask("(99) 9999-9999?9");
         $('#form').submit(function() {
             var pro_int_codigo = $('#pro_int_codigo').val();
             $('#p__selecionado').val();
             if ($('#form').gValidate()) {
                 var method = ($('#acao').val() == 'ins') ? 'POST' : 'PUT';
-                var endpoint = ($('#acao').val() == 'ins') ? URL_API + 'proprietarios' : URL_API + 'proprietarios/' + pro_int_codigo;
+                var endpoint = ($('#acao').val() == 'ins') ? URL_API +'index.php/'+ 'proprietarios' : URL_API+'index.php/' + 'proprietarios/' + pro_int_codigo;
                 $.gAjax.exec(method, endpoint, $('#form').serializeArray(), false, function(json) {
                     if (json.status) {
                         showList(true);
