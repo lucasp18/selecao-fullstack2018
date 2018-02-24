@@ -2,7 +2,6 @@
 require_once '../_inc/global.php';
 
 $form = new GForm();
-$mysql = new GDbMysql();
 
 $header = new GHeader('Animais');
 $header->addLib(array('paginate', 'maskMoney'));
