@@ -28,7 +28,7 @@ try {
         }
 
 
-        $htmlForm .= $form->addSelect('ani_cha_vivo', $proprietarios, '', 'Proprietario*', array('validate' => 'required'), false, false, true, '', 'Selecione...');
+        $htmlForm .= $form->addSelect('pro_int_codigo', $proprietarios, '', 'Proprietario*', array('validate' => 'required'), false, false, true, '', 'Selecione...');
         $htmlForm .= $form->addInput('text', 'ani_var_nome', 'Nome*', array('maxlength' => '50', 'validate' => 'required'));
         $htmlForm .= $form->addSelect('ani_cha_vivo', array('S' => 'Sim', 'N' => 'Não'), '', 'Vivo*', array('validate' => 'required'), false, false, true, '', 'Selecione...');
 
@@ -55,14 +55,13 @@ try {
 ?>
 <script>
     $(function() {
-        $('#ani_dec_peso').maskMoney({thousands:'.', decimal:',', precision:3,  affixesStay: false});
-
-        $('#form').submit(function() {
+        $('#ani_dec_peso').maskMoney({thousands:'.', decimal:',', precision:3,  affixesStay: false});        
+        $('#form').submit(function() {            
             var ani_int_codigo = $('#ani_int_codigo').val();
             $('#p__selecionado').val();
             if ($('#form').gValidate()) {
                 var method = ($('#acao').val() == 'ins') ? 'POST' : 'PUT';
-                var endpoint = ($('#acao').val() == 'ins') ? URL_API + 'animais' : URL_API + 'animais/' + ani_int_codigo;
+                var endpoint = ($('#acao').val() == 'ins') ? URL_API + 'index.php/'+ 'animais' : URL_API + 'index.php/'+'animais/' + ani_int_codigo;
                 $.gAjax.exec(method, endpoint, $('#form').serializeArray(), false, function(json) {
                     if (json.status) {
                         showList(true);
