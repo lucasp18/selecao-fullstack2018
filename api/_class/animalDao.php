@@ -27,16 +27,18 @@ class AnimalDao {
             $animal->getAni_var_nome(),
             $animal->getAni_dec_peso(),
             $animal->getAni_var_raca(),
-            $animal->getAni_cha_vivo()           
+            $animal->getAni_cha_vivo(),           
+            $animal->getPro_int_codigo()           
             );
         try{
-            $mysql = new GDbMysql();
-            $mysql->execute("CALL sp_animal_ins(?,?,?,?, @p_status, @p_msg, @p_insert_id);", $param, false);
-            $mysql->execute("SELECT @p_status, @p_msg, @p_insert_id");
-            $mysql->fetch();
+            $mysql = new GDbMysql();            
+            $mysql->execute("CALL sp_animal_ins('$param[1]',$param[2],'$param[3]','$param[4]','$param[5]', @p_status, @p_msg, @p_insert_id);", $param, false);
+            
+            $mysql->execute("SELECT @p_status, @p_msg, @p_insert_id");            
+            $mysql->fetch();            
             $return["status"] = ($mysql->res[0]) ? true : false;
             $return["msg"] = $mysql->res[1];
-            $return["insertId"] = $mysql->res[2];
+            $return["insertId"] = $mysql->res[2];                        
             $mysql->close();
         } catch (GDbException $e) {
             $return["status"] = false;
