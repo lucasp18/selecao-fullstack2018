@@ -1,5 +1,7 @@
 <?php
 $form = new GForm();
+$mysql = new GDbMysql();
+$filter = new GFilter();
 
 //<editor-fold desc="Header">
 $title = '<span class="acaoTitulo"></span>';
@@ -7,24 +9,49 @@ $tools = '<a id="f__btn_voltar"><i class="fa fa-arrow-left font-blue-steel"></i>
 $htmlForm .= getWidgetHeader($title, $tools);
 //</editor-fold>
 //<editor-fold desc="Formulário">
-$htmlForm .= $form->open('form', 'form-vertical form');
-$htmlForm .= $form->addInput('hidden', 'acao', false, array('value' => 'ins', 'class' => 'acao'), false, false, false);
-$htmlForm .= $form->addInput('hidden', 'ani_int_codigo', false, array('value' => ''), false, false, false);
-$htmlForm .= $form->addInput('text', 'ani_var_nome', 'Nome*', array('maxlength' => '50', 'validate' => 'required'));
-$htmlForm .= $form->addSelect('ani_cha_vivo', array('S' => 'Sim', 'N' => 'Não'), '', 'Vivo*', array('validate' => 'required'), false, false, true, '', 'Selecione...');
 
-$htmlForm .= $form->addInput('text', 'ani_dec_peso', 'Peso*', array('maxlength' => '100', 'validate' => 'required'));
-$htmlForm .= $form->addInput('text', 'ani_var_raca', 'Raça*', array('maxlength' => '100', 'validate' => 'required'));
+try {
+
+    $filter->setOrder(array('pro_var_nome' => 'ASC'));
+    $mysql->execute('SELECT pro_int_codigo, pro_var_nome FROM vw_proprietario ', $filter->getParam() );
+
+    if ($mysql->numRows() > 0) {
 
 
-$htmlForm .= '<div class="form-actions">';
-$htmlForm .= getBotoesAcao(true);
-$htmlForm .= '</div>';
-$htmlForm .= $form->close();
-//</editor-fold>
-$htmlForm .= getWidgetFooter();
+        $htmlForm .= $form->open('form', 'form-vertical form');
+        $htmlForm .= $form->addInput('hidden', 'acao', false, array('value' => 'ins', 'class' => 'acao'), false, false, false);
+        $htmlForm .= $form->addInput('hidden', 'ani_int_codigo', false, array('value' => ''), false, false, false);
 
-echo $htmlForm;
+
+        while ($mysql->fetch()) {
+            $proprietarios[$mysql->res['pro_int_codigo']] = $mysql->res['pro_var_nome'];
+        }
+
+
+        $htmlForm .= $form->addSelect('ani_cha_vivo', $proprietarios, '', 'Proprietario*', array('validate' => 'required'), false, false, true, '', 'Selecione...');
+        $htmlForm .= $form->addInput('text', 'ani_var_nome', 'Nome*', array('maxlength' => '50', 'validate' => 'required'));
+        $htmlForm .= $form->addSelect('ani_cha_vivo', array('S' => 'Sim', 'N' => 'Não'), '', 'Vivo*', array('validate' => 'required'), false, false, true, '', 'Selecione...');
+
+        $htmlForm .= $form->addInput('text', 'ani_dec_peso', 'Peso*', array('maxlength' => '100', 'validate' => 'required'));
+        $htmlForm .= $form->addInput('text', 'ani_var_raca', 'Raça*', array('maxlength' => '100', 'validate' => 'required'));
+
+
+        $htmlForm .= '<div class="form-actions">';
+        $htmlForm .= getBotoesAcao(true);
+        $htmlForm .= '</div>';
+        $htmlForm .= $form->close();
+        //</editor-fold>
+        $htmlForm .= getWidgetFooter();
+
+        echo $htmlForm;
+    }else{
+        echo '<div class="nenhumResultado">Nenhum Proprietario Cadastrado.</div>';
+    }
+
+} catch (GDbException $exc) {
+    echo $exc->getError();
+}
+
 ?>
 <script>
     $(function() {
