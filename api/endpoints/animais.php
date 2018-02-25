@@ -64,12 +64,13 @@ $app->put('/animais/{ani_int_codigo}', function (Request $request, Response $res
  	$animal->setAni_cha_vivo($body['ani_cha_vivo']);
  	$animal->setAni_dec_peso($body['ani_dec_peso']);
  	$animal->setRac_int_codigo($body['rac_int_codigo']);
+    $animal->setPro_int_codigo($body['pro_int_codigo']);
 
     $data = AnimalDao::update($animal);
     $code = ($data['status']) ? 200 : 500;
 
 	return $response->withJson($data, $code);
-});
+})->add($mwFormatarVirgulaPonto);
 
 
 $app->delete('/animais/{ani_int_codigo}', function (Request $request, Response $response) {
