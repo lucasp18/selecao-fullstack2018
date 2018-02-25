@@ -165,7 +165,7 @@ $$
 -- Definition for procedure sp_animal_upd
 --
 DROP PROCEDURE IF EXISTS sp_animal_upd$$
-CREATE PROCEDURE sp_animal_upd(IN p_ani_var_nome VARCHAR(50), IN p_ani_dec_peso DECIMAL(8,3), IN p_rac_int_codigo INT(11), IN p_ani_cha_vivo CHAR(1), IN p_pro_int_codigo INT(11), INOUT p_status BOOLEAN, INOUT p_msg TEXT)
+CREATE PROCEDURE sp_animal_upd(IN p_ani_int_codigo int(11), IN p_ani_var_nome VARCHAR(50), IN p_ani_dec_peso DECIMAL(8,3), IN p_rac_int_codigo INT(11), IN p_ani_cha_vivo CHAR(1), IN p_pro_int_codigo INT(11), INOUT p_status BOOLEAN, INOUT p_msg TEXT)
   SQL SECURITY INVOKER
   COMMENT 'Procedure de Update'
 BEGIN
@@ -227,9 +227,7 @@ BEGIN
 
   IF p_msg = '' THEN
 
-    START TRANSACTION;
-
-    p_ani_var_nome VARCHAR(50), IN p_ani_dec_peso DECIMAL(8,3), IN  INT(11), IN p_ani_cha_vivo CHAR(1), IN p_pro_int_codigo INT(11)
+    START TRANSACTION;    
 
     UPDATE animal
     SET ani_var_nome = p_ani_var_nome,
