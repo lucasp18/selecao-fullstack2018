@@ -68,7 +68,7 @@ class AnimalDao {
             $animal->getPro_int_codigo());
         try{
             $mysql = new GDbMysql();
-            $mysql->execute("CALL sp_animal_upd(?,?,?,?,?, @p_status, @p_msg);", $param, true);
+            $mysql->execute("CALL sp_animal_upd($param[1],'$param[2]',$param[3],$param[4],'$param[5]',$param[6], @p_status, @p_msg);", $param, true);
             $mysql->execute("SELECT @p_status, @p_msg");
             $mysql->fetch();
             $return["status"] = ($mysql->res[0]) ? true : false;
