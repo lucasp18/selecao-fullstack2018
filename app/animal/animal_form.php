@@ -2,6 +2,7 @@
 $form = new GForm();
 $mysql = new GDbMysql();
 $filter = new GFilter();
+$filterRaca = new GFilter();
 
 //<editor-fold desc="Header">
 $title = '<span class="acaoTitulo"></span>';
@@ -33,8 +34,17 @@ try {
         $htmlForm .= $form->addSelect('ani_cha_vivo', array('S' => 'Sim', 'N' => 'Não'), '', 'Vivo*', array('validate' => 'required'), false, false, true, '', 'Selecione...');
 
         $htmlForm .= $form->addInput('text', 'ani_dec_peso', 'Peso*', array('maxlength' => '100', 'validate' => 'required'));
-        $htmlForm .= $form->addInput('text', 'ani_var_raca', 'Raça*', array('maxlength' => '100', 'validate' => 'required'));
+        
 
+        $filterRaca->setOrder(array('rac_var_nome' => 'DESC'));
+        $mysql->execute('SELECT rac_int_codigo, rac_var_nome FROM vw_raca ', $filterRaca->getParam() );
+
+        while ($mysql->fetch()) {
+            $racas[$mysql->res['rac_int_codigo']] = $mysql->res['rac_var_nome'];
+        }        
+        
+        $htmlForm .= $form->addSelect('rac_int_codigo', $racas, '', 'Raça*', array('validate' => 'required'), false, false, true, '', 'Selecione...');
+        
 
         $htmlForm .= '<div class="form-actions">';
         $htmlForm .= getBotoesAcao(true);

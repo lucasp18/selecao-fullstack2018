@@ -31,6 +31,7 @@ $app->post('/usuarios', function (Request $request, Response $response) {
 });
 
 $app->put('/usuarios/{usu_int_codigo}', function (Request $request, Response $response) {
+    die('update');
     $body = $request->getParsedBody();
 	$usu_int_codigo = $request->getAttribute('usu_int_codigo');
     

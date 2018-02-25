@@ -39,12 +39,12 @@ class Animal{
 		$this->ani_dec_peso = $ani_dec_peso;
 	}
 
-	public function getAni_var_raca() {
-		return $this->ani_var_raca;
+	public function getRac_int_codigo() {
+		return $this->rac_int_codigo;
 	}
 
-	public function setAni_var_raca($ani_var_raca) {
-		$this->ani_var_raca = $ani_var_raca;
+	public function setRac_int_codigo($rac_int_codigo) {
+		$this->rac_int_codigo = $rac_int_codigo;
 	}
 
 	public function getPro_int_codigo()

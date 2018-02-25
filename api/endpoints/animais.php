@@ -20,14 +20,16 @@ $mwFormatarVirgulaPonto = function (Request $request, $response, $next ){
 };
 
 $app->get('/animais/{ani_int_codigo}', function (Request $request, Response $response) {
+    //die('aquii');
     $ani_int_codigo = $request->getAttribute('ani_int_codigo');
-    
+    //die($ani_int_codigo);
     $animal = new Animal();
     $animal->setAni_int_codigo($ani_int_codigo);
 
     $data = AnimalDao::selectByIdForm($animal);
     $code = count($data) > 0 ? 200 : 404;
-
+    //var_dump($data);
+    //die('fimm');
 	return $response->withJson($data, $code);
 });
 
@@ -39,7 +41,7 @@ $app->post('/animais', function (Request $request, Response $response) {
     $animal->setAni_var_nome($body['ani_var_nome']);
  	$animal->setAni_cha_vivo($body['ani_cha_vivo']);
  	$animal->setAni_dec_peso($body['ani_dec_peso']);
- 	$animal->setAni_var_raca($body['ani_var_raca']);
+ 	$animal->setRac_int_codigo($body['rac_int_codigo']);
     $animal->setPro_int_codigo($body['pro_int_codigo']);
     
     $data = AnimalDao::insert($animal);
@@ -50,16 +52,18 @@ $app->post('/animais', function (Request $request, Response $response) {
 
 
 $app->put('/animais/{ani_int_codigo}', function (Request $request, Response $response) {
+    
     $body = $request->getParsedBody();
 	$ani_int_codigo = $request->getAttribute('ani_int_codigo');
-    
+    //var_dump($body);
+    //die('update animal2');
     $animal = new Animal();
 
     $animal->setAni_int_codigo($ani_int_codigo);
     $animal->setAni_var_nome($body['ani_var_nome']);
  	$animal->setAni_cha_vivo($body['ani_cha_vivo']);
  	$animal->setAni_dec_peso($body['ani_dec_peso']);
- 	$animal->setAni_var_raca($body['ani_var_raca']);
+ 	$animal->setRac_int_codigo($body['rac_int_codigo']);
 
     $data = AnimalDao::update($animal);
     $code = ($data['status']) ? 200 : 500;
