@@ -251,6 +251,61 @@ $$
 
 
 
+--
+-- Definition for procedure sp_animalvacina_aplica_ins
+--
+DROP PROCEDURE IF EXISTS sp_animalvacina_aplica_ins$$
+CREATE PROCEDURE sp_animalvacina_aplica_ins(IN p_ani_int_codigo INT(11), IN p_usu_int_codigo INT(11), IN p_vac_int_codigo INT(11) ,IN p_aplica CHAR(1), INOUT p_status BOOLEAN, INOUT p_msg TEXT, INOUT p_insert_id INT(11))
+  SQL SECURITY INVOKER
+  COMMENT 'Procedure de Update'
+BEGIN
+
+  DECLARE v_existe boolean;
+  DECLARE v_ani_cha_vivo char(1);
+
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    ROLLBACK;
+    SET p_status = FALSE;
+    SET p_msg = 'Erro ao executar o procedimento.';
+  END;
+
+  SET p_msg = '';
+  SET p_status = FALSE;
+  
+  -- VALIDAÇÕES
+  SELECT a.ani_cha_vivo
+  INTO v_ani_cha_vivo
+  FROM animal a
+  WHERE a.ani_int_codigo = p_ani_int_codigo;
+  IF v_ani_cha_vivo = 'N' THEN
+    SET p_msg = CONCAT(p_msg, 'Não pode ser programada uma vacina para um animal morto. <br />');
+   END IF;
+
+  IF p_aplica NOT IN ('S', 'N') THEN
+    SET p_msg = CONCAT(p_msg, 'Tipo de Aplicação Inválido. <br />');
+  END IF;
+
+  IF p_msg = '' THEN
+
+    START TRANSACTION;
+
+    INSERT INTO animal_vacina(ani_int_codigo, vac_int_codigo, usu_int_codigo, anv_dti_aplicacao, anv_dat_programacao) 
+    VALUES (p_ani_int_codigo, p_vac_int_codigo, p_usu_int_codigo, CURRENT_TIMESTAMP(), NOW());    
+
+    COMMIT;
+
+    SET p_status = TRUE;
+    SET p_msg = 'Um novo registro foi inserido com sucesso.';
+    SET p_insert_id = LAST_INSERT_ID();
+
+  END IF;
+
+END
+$$
+
+
+
 DELIMITER ;
 
 
@@ -277,4 +332,20 @@ VIEW vw_raca
 AS
   select `raca`.`rac_int_codigo` AS `rac_int_codigo`,`raca`.`rac_var_nome` AS `rac_var_nome` from `raca`;
 
+--
+-- Definition for view vw_animal_vacina
+--
+DROP VIEW IF EXISTS vw_animal_vacina CASCADE;
+CREATE OR REPLACE
+  SQL SECURITY INVOKER
+VIEW vw_animal_vacina
+AS
+  select animal_vacina.anv_int_codigo AS 'anv_int_codigo', `animal_vacina`.`usu_int_codigo` AS `usu_int_codigo`, `usuario`.`usu_var_nome` AS `usu_var_nome` , 
+    `animal_vacina`.`vac_int_codigo` AS `vac_int_codigo`, `vacina`.`vac_var_nome` AS `vac_var_nome`,
+    `animal_vacina`.`ani_int_codigo` AS `ani_int_codigo`, `animal`.`ani_var_nome` AS `ani_var_nome`
+
+  from `animal_vacina` inner join usuario on usuario.usu_int_codigo = animal_vacina.usu_int_codigo
+  inner join vacina on vacina.vac_int_codigo = animal_vacina.vac_int_codigo
+  inner join animal on animal.ani_int_codigo = animal_vacina.ani_int_codigo
+  ;
 
